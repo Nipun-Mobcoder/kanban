@@ -1,0 +1,130 @@
+.custom_input {
+  border:1px solid #E2E8F0;
+  background-color: white;
+  padding: 0.25rem 0.75rem;
+  font-size: 1rem;
+  min-width: 0;
+  height: 2.25rem;
+  width: 100%;
+  border-radius: 2.775rem;
+  transition: color 0.2s, box-shadow 0.2s;
+  outline: none;
+  color: black;
+}
+
+.custom_input[type="file"] {
+  display: inline-flex;
+  height: 1.75rem;
+  border: 0;
+  background-color: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.custom_input::placeholder {
+  color: oklch(0.554 0.046 257.417);
+}
+
+.custom_input::selection {
+  background-color: oklch(0.208 0.042 265.755);
+  color: oklch(0.984 0.003 247.858);
+}
+
+.custom_input:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.custom_input:focus-visible {
+  border-color: oklch(0.704 0.04 256.788);
+  box-shadow: 0 0 0 3px rgba(oklch(0.704 0.04 256.788), 0.5);
+}
+
+.custom_input[aria-invalid="true"] {
+  border-color: oklch(0.577 0.245 27.325);
+  box-shadow: 0 0 0 3px rgba(oklch(0.577 0.245 27.325), 0.2);
+}
+
+.button {
+  color: white;
+  background-color: #1476ff;
+  font-weight: 500;
+  border-radius: 0.5em;
+  font-size: 0.875em;
+  line-height: 1.25em;
+  padding-left: 1.25em;
+  padding-right: 1.25em;
+  padding-top: 0.625em;
+  padding-bottom: 0.625em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-color: #1476ff;
+}
+
+.button:hover {
+  background-color: #1476ff9a;
+  border-color: #1476ff9a;
+}
+
+.button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  background-color: #93c5fd;
+}
+
+.avatar {
+  position: relative;
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.avatar_image {
+  aspect-ratio: 1/1;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.avatar_fallback {
+  background-color: oklch(0.968 0.007 247.896);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.tag {
+  background-color: #4f46e5;
+  border-radius: 1.5rem;
+  max-width: 25%;
+  min-width: 8%;
+  height: 100%;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag_text {
+  font-size: 12px;
+  font-weight: 400;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .custom_input {
+    font-size: 0.875rem;
+  }
+}
+
