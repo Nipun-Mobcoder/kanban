@@ -1,17 +1,38 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import styles from "./components.module.css";
 import { RequestItem } from "@/constants/requestData";
 import Tags from "./ui/tags";
+import { motion } from "framer-motion";
+import { ThumbsUp, MessageCircleMore } from "lucide-react";
 
 interface HomeCardProps {
   value: RequestItem;
 }
 const HomeCard = ({ value }: HomeCardProps) => {
   return (
-    <div className={styles.home_card} onClick={() => {}}>
+    <motion.div
+      className={styles.home_card}
+      whileHover={{ scale: 1.05 }}
+      // whileTap={{ scale: 0.95 }}
+    >
       {value?.img ? (
         <div className={styles.home_image}>
           <img src={value.img} alt="" />
+        </div>
+      ) : null}
+      {value?.lines ? (
+        <div className={styles.card_line}>
+          {value.lines.map((line) => {
+            return (
+              <div
+                key={line}
+                style={{
+                  backgroundColor: `${line}`,
+                }}
+              ></div>
+            );
+          })}
         </div>
       ) : null}
       <div className={styles.home_text}>
@@ -33,12 +54,23 @@ const HomeCard = ({ value }: HomeCardProps) => {
             </div>
           ) : null}
           <p className={styles.home_description}>{value.date}</p>
-          <div>
-            
+          <div className={styles.home_likes_comments}>
+            {value.comments ? (
+              <div>
+                <MessageCircleMore width={16} height={16} color="#94A3B8" />
+                <div style={{ color: "#1E293B" }}>{value.comments}</div>
+              </div>
+            ) : null}
+            {value.likes ? (
+              <div>
+                <ThumbsUp width={16} height={16} color="#94A3B8" />
+                <div style={{ color: "#1E293B" }}>{value.likes}</div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

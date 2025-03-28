@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kanban",
   description: "A to-do list platform with much more.",
+  icons: '/icons/logo.svg'
 };
 
 export default function RootLayout({
