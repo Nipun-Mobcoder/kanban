@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import style from "./root.module.css";
 import CardList from "@/components/CardList";
 import { requestData, RequestItem } from "@/constants/requestData";
@@ -13,67 +13,78 @@ const Home = () => {
   );
 
   const [fromList, setFromList] = useState<string | null>(null);
-  const [toList, setToList] = useState<string | null>(null);
-  const [revertingCards, setRevertingCards] = useState<{ [key: string]: boolean }>({});
   const [draggedItem, setDraggedItem] = useState<RequestItem | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [revert, setRevert] = useState<boolean>(false);
+  const [initialPosition, setInitialPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
-  const onDragStart = (item: RequestItem, fromList: string) => {
+  const onDragStart = (item: RequestItem, fromList: string, info: PanInfo) => {
     setFromList(fromList);
     setDraggedItem(item);
-    setRevertingCards((prev) => ({ ...prev, [item.heading]: false }));
+    setRevert(false);
+    setInitialPosition({ x: info.offset.x, y: info.offset.y });
   };
 
   const onDragEnd = (info: PanInfo) => {
     if (!fromList || !draggedItem) return;
-    console.log(info.point);
 
     const elementUnderCursor = document.elementFromPoint(
       info.point.x,
       info.point.y
     );
     let targetList = fromList;
-    console.log(elementUnderCursor, elementUnderCursor.closest(".card-list-global"))
+    let targetIndex = -1;
+    let isDroppedOutside = true;
 
     if (elementUnderCursor) {
       const closestList = elementUnderCursor.closest(".card-list-global");
       if (closestList) {
         targetList = closestList.getAttribute("data-listname") ?? fromList;
+        isDroppedOutside = false;
+      }
+
+      const closestCard = elementUnderCursor.closest(".draggable-card");
+      if (closestCard && closestCard.parentNode) {
+        targetIndex = Array.from(closestCard.parentNode.children).indexOf(
+          closestCard
+        );
       }
     }
 
-    setToList(targetList);
-    if(targetList === fromList) {
-      setRevertingCards((prev) => ({ ...prev, [draggedItem.heading]: true }));
-    }
-  };
-
-  useEffect(() => {
-    if (fromList && toList && draggedItem && fromList !== toList) {
+    if (isDroppedOutside || targetList === fromList) {
+      setRevert(true);
+      setTimeout(() => {
+        setRevert(false);
+        setDraggedItem(null);
+      }, 300);
+    } else {
       setData((prevData) => {
         const updatedSourceList =
           prevData[fromList]?.filter(
             (i) => i.heading !== draggedItem.heading
           ) || [];
-        const updatedDestinationList = [
-          ...(prevData[toList] || []),
-          draggedItem,
-        ];
+
+        const updatedDestinationList = [...(prevData[targetList] || [])];
+        if (targetIndex >= 0) {
+          updatedDestinationList.splice(targetIndex, 0, draggedItem);
+        } else {
+          updatedDestinationList.push(draggedItem);
+        }
 
         return {
           ...prevData,
           [fromList]: updatedSourceList,
-          [toList]: updatedDestinationList,
+          [targetList]: updatedDestinationList,
         };
       });
 
       setFromList(null);
-      setToList(null);
-      setDraggedItem(null);
+      setTimeout(() => setDraggedItem(null), 100);
     }
-  }, [fromList, toList, draggedItem]);
-  useEffect(() => {
-    console.log("Updated Data:", data);
-  }, [data]);
+  };
 
   return (
     <section className={style.main_section}>
@@ -82,15 +93,21 @@ const Home = () => {
           <CardList
             listName={list}
             data={data[list]}
-            onDragStart={(item) => onDragStart(item, list)}
+            onDragStart={(item, _val, info) => onDragStart(item, list, info)}
             onDragEnd={onDragEnd}
-            revertingCards={revertingCards}
+            draggedItem={draggedItem}
+            hoveredCard={hoveredCard}
+            setHoveredCard={setHoveredCard}
+            revert={revert}
+            setRevert={setRevert}
+            setDraggedItem={setDraggedItem}
+            initialPosition={initialPosition}
+            setInitialPosition={setInitialPosition}
           />
         </div>
       ))}
     </section>
   );
-  
 };
 
 export default Home;

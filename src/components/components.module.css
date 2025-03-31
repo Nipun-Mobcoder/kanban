@@ -91,6 +91,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
 }
 
 .share_icon {
@@ -138,7 +139,7 @@
   -webkit-backdrop-filter: blur(4px);
   width: 100%;
   min-height: 50px;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .home_image img {
